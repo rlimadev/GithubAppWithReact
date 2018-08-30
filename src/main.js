@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Title from './app';
+import App from './app';
 
 ReactDOM.render(
-  React.createElement(Title),
-  document.querySelector('[data-js="app"]'),
+  React.createElement(App),
+  /* eslint-disable */
+  document.querySelector('[data-js="app"]'), 
 );
