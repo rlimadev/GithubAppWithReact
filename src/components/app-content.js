@@ -7,12 +7,12 @@ import Repos from './repos';
 
 
 const AppContent = ({
-  userinfo, repos, starred, handleSearch,
+  userinfo, repos, starred, handleSearch, getRepos, getStarred,
 }) => (
   <div className="app">
     <Search handleSearch={handleSearch} />
-    {!!userinfo && <UserInfo userinfo={userinfo} />}
-    {!!userinfo && <Actions />}
+    {!!userinfo.username && <UserInfo userinfo={userinfo} />}
+    {!!userinfo.username && <Actions getRepos={getRepos} getStarred={getStarred} />}
 
     {!!repos.length && (<Repos className="repos" title="Repositórios:" repos={repos} />)}
 
@@ -26,6 +26,8 @@ AppContent.propTypes = {
   repos: PropTypes.objectOf(PropTypes.object).isRequired,
   starred: PropTypes.arrayOf(PropTypes.array).isRequired,
   handleSearch: PropTypes.func.isRequired,
+  getRepos: PropTypes.func.isRequired,
+  getStarred: PropTypes.func.isRequired,
 };
 
 export default AppContent;

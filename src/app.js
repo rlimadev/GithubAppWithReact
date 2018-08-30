@@ -11,6 +11,17 @@ class App extends Component {
     };
   }
 
+  getRepos(type) {
+    fetch(`https://api.github.com/users/${this.state.userinfo.login}/${type}`)
+      .then(response => response.json())
+      .then((reposResult) => {
+        console.log(reposResult, 'reposResult');
+        this.setState({
+          [type]: reposResult.map(data => ({ name: data.name, link: data.html_url })),
+        });
+      });
+  }
+
   handleSearch(e) {
     this.value = e.target.value;
     this.keyCode = e.which || e.keyCode;
@@ -31,28 +42,8 @@ class App extends Component {
               following: result.following,
             },
           });
-          fetch(result.repos_url)
-            .then(response => response.json())
-            .then((reposResult) => {
-              console.log(reposResult, 'reposResult');
-              this.setState({
-                repos: reposResult.map(data => ({ name: data.name, link: data.html_url })),
-              });
-            });
-
-
-          const starredURL = result.starred_url;
-          fetch(starredURL.replace('{/owner}{/repo}', ''))
-            .then(response => response.json())
-            .then((reposResultStarred) => {
-              console.log(reposResultStarred, 'reposStarred');
-              this.setState({
-                starred: reposResultStarred.map(dataStarred => (
-                  { name: dataStarred.name, link: dataStarred.html_url })),
-              });
-            });
         });
-    }
+    } 
   }
 
   render() {
@@ -62,6 +53,8 @@ class App extends Component {
         repos={this.state.repos}
         starred={this.state.starred}
         handleSearch={e => this.handleSearch(e)}
+        getRepos={() => this.getRepos('repos')}
+        getStarred={() => this.getRepos('starred')}
       />
     );
   }
