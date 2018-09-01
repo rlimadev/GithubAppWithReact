@@ -10236,7 +10236,8 @@ var App = function (_Component) {
     _this.state = {
       userinfo: null,
       repos: [],
-      starred: []
+      starred: [],
+      isFetching: false
     };
     return _this;
   }
@@ -10265,40 +10266,56 @@ var App = function (_Component) {
       this.ENTER = 13;
 
       if (this.keyCode === this.ENTER) {
-        fetch('https://api.github.com/users/' + this.value).then(function (response) {
-          return response.json();
-        }).then(function (result) {
-          console.log(result);
-          _this3.setState({
-            userinfo: {
-              username: result.name,
-              photo: result.avatar_url,
-              login: result.login,
-              repos: result.public_repos,
-              followers: result.followers,
-              following: result.following
-            }
-          });
-        });
+        this.setState({ isFetching: true });
+        setTimeout(function () {
+          _this3.doFetch(_this3.value);
+        }, 1500);
       }
+    }
+  }, {
+    key: 'doFetch',
+    value: function doFetch(value) {
+      var _this4 = this;
+
+      fetch('https://api.github.com/users/' + value).then(this.setState({ isFetching: false })).then(function (response) {
+        return response.json();
+      }).then(function (result) {
+        console.log(result);
+        _this4.setState({
+          userinfo: {
+            username: result.name,
+            photo: result.avatar_url,
+            login: result.login,
+            repos: result.public_repos,
+            followers: result.followers,
+            following: result.following
+          }
+        });
+      });
+
+      this.setState({
+        repos: [],
+        starred: []
+      });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this4 = this;
+      var _this5 = this;
 
       return _react2.default.createElement(_appContent2.default, {
         userinfo: Object(this.state.userinfo),
         repos: this.state.repos,
         starred: this.state.starred,
+        isFetching: this.state.isFetching,
         handleSearch: function handleSearch(e) {
-          return _this4.handleSearch(e);
+          return _this5.handleSearch(e);
         },
         getRepos: function getRepos() {
-          return _this4.getRepos('repos');
+          return _this5.getRepos('repos');
         },
         getStarred: function getStarred() {
-          return _this4.getRepos('starred');
+          return _this5.getRepos('starred');
         }
       });
     }
@@ -10409,11 +10426,17 @@ var AppContent = function AppContent(_ref) {
       starred = _ref.starred,
       handleSearch = _ref.handleSearch,
       getRepos = _ref.getRepos,
-      getStarred = _ref.getStarred;
+      getStarred = _ref.getStarred,
+      isFetching = _ref.isFetching;
   return _react2.default.createElement(
     'div',
     { className: 'app' },
-    _react2.default.createElement(_search2.default, { handleSearch: handleSearch }),
+    _react2.default.createElement(_search2.default, { isFetching: isFetching, handleSearch: handleSearch }),
+    isFetching && _react2.default.createElement(
+      'div',
+      null,
+      'Carregando...'
+    ),
     !!userinfo.username && _react2.default.createElement(_userinfo2.default, { userinfo: userinfo }),
     !!userinfo.username && _react2.default.createElement(_actions2.default, { getRepos: getRepos, getStarred: getStarred }),
     !!repos.length && _react2.default.createElement(_repos2.default, { className: 'repos', title: 'Reposit\xF3rios:', repos: repos }),
@@ -10427,7 +10450,8 @@ AppContent.propTypes = {
   starred: _propTypes2.default.arrayOf(_propTypes2.default.array).isRequired,
   handleSearch: _propTypes2.default.func.isRequired,
   getRepos: _propTypes2.default.func.isRequired,
-  getStarred: _propTypes2.default.func.isRequired
+  getStarred: _propTypes2.default.func.isRequired,
+  isFetching: _propTypes2.default.bool.isRequired
 };
 
 exports.default = AppContent;
@@ -10518,20 +10542,24 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Search = function Search(_ref) {
-  var handleSearch = _ref.handleSearch;
+  var isFetching = _ref.isFetching,
+      handleSearch = _ref.handleSearch;
   return _react2.default.createElement(
     'div',
     { className: 'search' },
     _react2.default.createElement('input', {
       type: 'search',
       placeholder: 'Digite o nome do usu\xE1rio do Github',
+      disabled: isFetching,
       onKeyUp: handleSearch
     })
   );
 };
 
 Search.propTypes = {
+  isFetching: _propTypes2.default.bool.isRequired,
   handleSearch: _propTypes2.default.func.isRequired
+
 };
 
 exports.default = Search;

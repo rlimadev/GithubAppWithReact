@@ -8,6 +8,7 @@ class App extends Component {
       userinfo: null,
       repos: [],
       starred: [],
+      isFetching: false,
     };
   }
 
@@ -28,22 +29,35 @@ class App extends Component {
     this.ENTER = 13;
 
     if (this.keyCode === this.ENTER) {
-      fetch(`https://api.github.com/users/${this.value}`)
-        .then(response => response.json())
-        .then((result) => {
-          console.log(result);
-          this.setState({
-            userinfo: {
-              username: result.name,
-              photo: result.avatar_url,
-              login: result.login,
-              repos: result.public_repos,
-              followers: result.followers,
-              following: result.following,
-            },
-          });
+      this.setState({ isFetching: true });
+      setTimeout(() => {
+        this.doFetch(this.value);
+      }, 1500);
+    }
+  }
+
+  doFetch(value) {
+    fetch(`https://api.github.com/users/${value}`)
+      .then(this.setState({ isFetching: false }))
+      .then(response => response.json())
+      .then((result) => {
+        console.log(result);
+        this.setState({
+          userinfo: {
+            username: result.name,
+            photo: result.avatar_url,
+            login: result.login,
+            repos: result.public_repos,
+            followers: result.followers,
+            following: result.following,
+          },
         });
-    } 
+      });
+
+    this.setState({
+      repos: [],
+      starred: [],
+    });
   }
 
   render() {
@@ -52,6 +66,7 @@ class App extends Component {
         userinfo={Object(this.state.userinfo)}
         repos={this.state.repos}
         starred={this.state.starred}
+        isFetching={this.state.isFetching}
         handleSearch={e => this.handleSearch(e)}
         getRepos={() => this.getRepos('repos')}
         getStarred={() => this.getRepos('starred')}
