@@ -1,6 +1,6 @@
-# Project Title
+# GitHubApp
 
-Short description project here
+An app for training my ability with React and ReactDOM
 
 ## Getting Started
 
@@ -8,53 +8,25 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisities
 
-What things you need to install the software and how to install them
+Make clone this project on your machine
 
-```
-Give examples
-```
+git clone https://github.com/rlimadev/GithubAppWithReact.git
 
-### Installing
+You need have the NPM installed on your machine.
 
-A step by step series of examples that tell you have to get a development env running
+On bash or command line Execute npm command for install all packages this project.  
 
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
+-- npm install 
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+Without a test for the while.
 
-### Break down into end to end tests
+### How to build project?
 
-Explain what these tests test and why
+On bash or command line execute npm command for building the project 
 
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
+-- npm run build 
 
 ## Built With
 
@@ -63,6 +35,9 @@ Add additional notes about how to deploy this on a live system
 * Prettier
 * Eslint 
 * ES2015
+* React
+* ReactDOM
+* PropTypes
 
 ## Contributing
 
