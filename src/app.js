@@ -13,10 +13,16 @@ class App extends Component {
   }
 
   getRepos(type) {
+    if (this.state[type].length > 0) {
+      this.setState({
+        [type]: [],
+      });
+      return;
+    }
+
     fetch(`https://api.github.com/users/${this.state.userinfo.login}/${type}`)
       .then(response => response.json())
       .then((reposResult) => {
-        console.log(reposResult, 'reposResult');
         this.setState({
           [type]: reposResult.map(data => ({ name: data.name, link: data.html_url })),
         });
@@ -41,7 +47,6 @@ class App extends Component {
       .then(this.setState({ isFetching: false }))
       .then(response => response.json())
       .then((result) => {
-        console.log(result);
         this.setState({
           userinfo: {
             username: result.name,

@@ -10247,10 +10247,14 @@ var App = function (_Component) {
     value: function getRepos(type) {
       var _this2 = this;
 
+      if (this.state[type].length > 0) {
+        this.setState(_defineProperty({}, type, []));
+        return;
+      }
+
       fetch('https://api.github.com/users/' + this.state.userinfo.login + '/' + type).then(function (response) {
         return response.json();
       }).then(function (reposResult) {
-        console.log(reposResult, 'reposResult');
         _this2.setState(_defineProperty({}, type, reposResult.map(function (data) {
           return { name: data.name, link: data.html_url };
         })));
@@ -10280,7 +10284,6 @@ var App = function (_Component) {
       fetch('https://api.github.com/users/' + value).then(this.setState({ isFetching: false })).then(function (response) {
         return response.json();
       }).then(function (result) {
-        console.log(result);
         _this4.setState({
           userinfo: {
             username: result.name,
